@@ -1,11 +1,13 @@
 package me.athlaeos.progressivelydifficultmobs.managers;
 
-import me.athlaeos.progressivelydifficultmobs.abilities.*;
-import me.athlaeos.progressivelydifficultmobs.pojo.Ability;
+import me.athlaeos.progressivelydifficultmobs.resourse.abilities.*;
 import me.athlaeos.progressivelydifficultmobs.utils.Utils;
+import me.athlaeos.progressivelydifficultmobs.utils.general.Ability;
 import org.bukkit.ChatColor;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class AbilityManager {
 
@@ -18,11 +20,11 @@ public class AbilityManager {
     private Map<String, Ability> onMobDamagedAbilities = new HashMap<>(); // abilities executed when monster is damaged
     private Map<String, Ability> onMobClickedAbilities = new HashMap<>(); // abilities executed when monster is clicked
 
-    private Map<String, Ability> allAbilities = new TreeMap<>(); // a collection of all abilities
+    private final Map<String, Ability> allAbilities = new TreeMap<>(); // a collection of all abilities
 
-    public AbilityManager(){
+    public AbilityManager() {
         getAbilities();
-        if (PluginConfigurationManager.getInstance().useAnimationRunnables()){
+        if (PluginConfigurationManager.getInstance().useAnimationRunnables()) {
             runningAbilities.put("aaa_pdm_damage_aura", new DamageAuraAbility());
             runningAbilities.put("aaj_pdm_leap", new LungeTowardsPlayerAbility());
         }
@@ -83,79 +85,93 @@ public class AbilityManager {
         onMobClickedAbilities.put("on_click_give_offhand_unconditional", new GiveOffhandUnconditionallyAbility());
     }
 
+    public static AbilityManager getInstance() {
+        if (manager == null) {
+            manager = new AbilityManager();
+        }
+        return manager;
+    }
+
     /**
      * Registers a running ability
      * Typically reserved for abilities that involve BukkitRunnables
      * These abilities trigger when the monster spawns, and since they use BukkitRunnables they should
      * be used sparingly.
-     *
+     * <p>
      * For the execute method, player is null
+     *
      * @param ability
      */
-    public void registerRunningAbility(String name, Ability ability){
+    public void registerRunningAbility(String name, Ability ability) {
         runningAbilities.put(name, ability);
     }
 
     /**
      * Registers an ability to trigger on an EntityTargetLivingEntityEvent
-     *
+     * <p>
      * For the execute method, player is null
+     *
      * @param name
      * @param ability
      */
-    public void registerOnTargetEntityAbility(String name, Ability ability){
+    public void registerOnTargetEntityAbility(String name, Ability ability) {
         onTargetEntityAbilities.put(name, ability);
     }
 
     /**
      * Registers an ability that triggers on an EntityDamageByEntityEvent, but only
      * when the monster with this ability damages a player.
+     *
      * @param name
      * @param ability
      */
-    public void registerOnPlayerDamagedAbility(String name, Ability ability){
+    public void registerOnPlayerDamagedAbility(String name, Ability ability) {
         onPlayerDamagedAbilities.put(name, ability);
     }
 
     /**
      * Registers an ability that triggers on an EntitySpawnEvent
-     *
+     * <p>
      * For the execute method, player is null
+     *
      * @param name
      * @param ability
      */
-    public void registerInstantAbility(String name, Ability ability){
+    public void registerInstantAbility(String name, Ability ability) {
         instantAbilities.put(name, ability);
     }
 
     /**
      * Registers an ability that triggers on an EntityDamageByEntityEvent, but only
      * when the monster with this ability is damaged by a player.
+     *
      * @param name
      * @param ability
      */
-    public void registerOnMobDamagedByPlayer(String name, Ability ability){
+    public void registerOnMobDamagedByPlayer(String name, Ability ability) {
         onMobDamagedByPlayerAbilities.put(name, ability);
     }
 
     /**
      * Registers an ability that triggers on an EntityDamageEvent
-     *
+     * <p>
      * For the execute method, player is null
+     *
      * @param name
      * @param ability
      */
-    public void registerOnMobDamagedAbility(String name, Ability ability){
+    public void registerOnMobDamagedAbility(String name, Ability ability) {
         onMobDamagedAbilities.put(name, ability);
     }
 
     /**
      * Registers an ability that triggers on a PlayerInteractEntityEvent, when the player
      * clicks on an entity with an empty hand.
+     *
      * @param name
      * @param ability
      */
-    public void registerOnMobClickedAbility(String name, Ability ability){
+    public void registerOnMobClickedAbility(String name, Ability ability) {
         onMobClickedAbilities.put(name, ability);
     }
 
@@ -199,34 +215,28 @@ public class AbilityManager {
         return onMobClickedAbilities;
     }
 
-    public Ability getAbility(String id){
+    public Ability getAbility(String id) {
         return allAbilities.get(id);
     }
 
     /**
      * Pretty much exclusively used in the menus. Should not be used elsewhere unless you know what you're doing.
+     *
      * @param name
      * @return
      */
-    public String getAbilityKeyByName(String name){
-        for (String key : allAbilities.keySet()){
+    public String getAbilityKeyByName(String name) {
+        for (String key : allAbilities.keySet()) {
             String unstrippedName = allAbilities.get(key).getName();
             String strippedName = ChatColor.stripColor(Utils.chat(unstrippedName));
-            if (strippedName.equals(name)){
+            if (strippedName.equals(name)) {
                 return key;
             }
         }
         return null;
     }
 
-    public static AbilityManager getInstance(){
-        if (manager == null){
-            manager = new AbilityManager();
-        }
-        return manager;
-    }
-
-    public void reload(){
+    public void reload() {
         instantAbilities = new HashMap<>();
         onPlayerDamagedAbilities = new HashMap<>();
         runningAbilities = new HashMap<>();

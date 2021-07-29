@@ -7,7 +7,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import me.athlaeos.progressivelydifficultmobs.main.Main;
+import me.athlaeos.progressivelydifficultmobs.ProgressivelyMain;
 import me.athlaeos.progressivelydifficultmobs.managers.WorldguardManager;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -45,18 +45,18 @@ public class WorldguardHook {
     private StateFlag PDM_RAGE_DENY;
 
 
-    public WorldguardHook(){
+    public WorldguardHook() {
 
     }
 
-    public static WorldguardHook getInstance(){
-        if (manager == null){
+    public static WorldguardHook getInstance() {
+        if (manager == null) {
             manager = new WorldguardHook();
         }
         return manager;
     }
 
-    private StateFlag setFlag(String s){
+    private StateFlag setFlag(String s) {
         StateFlag newFlag = null;
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
@@ -68,19 +68,19 @@ public class WorldguardHook {
 //            if (existing instanceof StateFlag) {
 //                newFlag = (StateFlag) existing;
 //            } else {
-                System.out.println("[EnchantsSquared] Something went wrong with WorldguardHook#setFlag for flag " + s + ", contact the plugin developer!");
+            System.out.println("[EnchantsSquared] Something went wrong with WorldguardHook#setFlag for flag " + s + ", contact the plugin developer!");
 //            }
         }
         return newFlag;
     }
 
-    public boolean isLocationInFlaggedRegion(Location l, String flag){
-        if (WorldguardManager.getWorldguardManager().useWorldGuard()){
+    public boolean isLocationInFlaggedRegion(Location l, String flag) {
+        if (WorldguardManager.getWorldguardManager().useWorldGuard()) {
             RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
             RegionManager regions = container.get(BukkitAdapter.adapt(l.getWorld()));
             if (regions == null) return false;
             for (String region : regions.getRegions().keySet()) {
-                if (regions.getRegion(region).contains((int)l.getX(), (int)l.getY(), (int)l.getZ())) {
+                if (regions.getRegion(region).contains((int) l.getX(), (int) l.getY(), (int) l.getZ())) {
                     assert regions.getRegion(region) != null;
                     for (Flag f : regions.getRegion(region).getFlags().keySet()) {
                         if (f.getName().equals(flag)) {
@@ -93,14 +93,14 @@ public class WorldguardHook {
         return false;
     }
 
-    public List<String> getLocationRegions(Location l){
+    public List<String> getLocationRegions(Location l) {
         List<String> regions = new ArrayList<>();
-        if (WorldguardManager.getWorldguardManager().useWorldGuard()){
+        if (WorldguardManager.getWorldguardManager().useWorldGuard()) {
             RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
             RegionManager worldRegions = container.get(BukkitAdapter.adapt(l.getWorld()));
             if (worldRegions == null) return regions;
             for (String region : worldRegions.getRegions().keySet()) {
-                if (worldRegions.getRegion(region).contains((int)l.getX(), (int)l.getY(), (int)l.getZ())) {
+                if (worldRegions.getRegion(region).contains((int) l.getX(), (int) l.getY(), (int) l.getZ())) {
                     regions.add(region);
                 }
             }
@@ -108,16 +108,16 @@ public class WorldguardHook {
         return regions;
     }
 
-    public List<String> getAllRegions(){
+    public List<String> getAllRegions() {
         List<String> regions = new ArrayList<>();
-        if (WorldguardManager.getWorldguardManager().useWorldGuard()){
+        if (WorldguardManager.getWorldguardManager().useWorldGuard()) {
             RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-            for (World w : Main.getInstance().getServer().getWorlds()){
+            for (World w : ProgressivelyMain.getInstance().getServer().getWorlds()) {
                 RegionManager worldRegions = container.get(BukkitAdapter.adapt(w));
                 if (worldRegions == null) {
                     continue;
                 }
-                for (String region : worldRegions.getRegions().keySet()){
+                for (String region : worldRegions.getRegions().keySet()) {
                     regions.add(region);
                 }
             }
@@ -125,7 +125,7 @@ public class WorldguardHook {
         return regions;
     }
 
-    public void registerFlags(){
+    public void registerFlags() {
         this.PDM_CUSTOM_MONSTER_DENY = setFlag("pdm-custom-monster-deny");
         this.PDM_BREEDING_EXP_DENY = setFlag("pdm-breeding-exp-deny");
         this.PDM_DAMAGE_BUFF_DENY = setFlag("pdm-damage-buff-deny");

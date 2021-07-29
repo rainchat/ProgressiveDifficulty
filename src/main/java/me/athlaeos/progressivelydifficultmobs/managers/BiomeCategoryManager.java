@@ -1,6 +1,6 @@
 package me.athlaeos.progressivelydifficultmobs.managers;
 
-import me.athlaeos.progressivelydifficultmobs.pojo.Container;
+import me.athlaeos.progressivelydifficultmobs.utils.general.Container;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
 
@@ -9,9 +9,9 @@ import java.util.*;
 public class BiomeCategoryManager {
 
     private static BiomeCategoryManager manager = null;
-    private Map<String, Container<List<Biome>, Material>> allBiomes = new TreeMap<>();
+    private final Map<String, Container<List<Biome>, Material>> allBiomes = new TreeMap<>();
 
-    public BiomeCategoryManager(){
+    public BiomeCategoryManager() {
         registerBiome("Badlands", Arrays.asList(
                 "BADLANDS",
                 "BADLANDS_PLATEAU",
@@ -139,8 +139,8 @@ public class BiomeCategoryManager {
         ), "WARPED_FUNGUS");
     }
 
-    public static BiomeCategoryManager getInstance(){
-        if (manager == null){
+    public static BiomeCategoryManager getInstance() {
+        if (manager == null) {
             manager = new BiomeCategoryManager();
         }
         return manager;
@@ -152,21 +152,22 @@ public class BiomeCategoryManager {
 
     /**
      * Registers an amount of biomes into a category under name to be used in the biome filter.
-     *
+     * <p>
      * Example:
      * <code>
      * registerBiome("Taigas", Arrays.asList(
-     *     "TAIGA",
-     *     "TAIGA_HILLS"
+     * "TAIGA",
+     * "TAIGA_HILLS"
      * ), "SPRUCE_LOG");
      * </code>
-     *
+     * <p>
      * If a biome does not exist in this version of minecraft, it will be skipped.
+     *
      * @param category
      * @param stringBiomes
      * @param iconMaterial
      */
-    public void registerBiome(String category, List<String> stringBiomes, String iconMaterial){
+    public void registerBiome(String category, List<String> stringBiomes, String iconMaterial) {
         List<Biome> biomes = new ArrayList<>();
         for (String stringBiome : stringBiomes) {
             Biome b;
@@ -184,7 +185,7 @@ public class BiomeCategoryManager {
         } catch (IllegalArgumentException ignored) {
             material = Material.valueOf("GRASS_BLOCK");
         }
-        if (biomes.size() > 0){
+        if (biomes.size() > 0) {
             allBiomes.put(category, new Container<>(biomes, material));
         }
     }

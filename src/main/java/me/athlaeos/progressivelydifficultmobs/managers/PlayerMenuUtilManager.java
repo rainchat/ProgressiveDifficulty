@@ -1,20 +1,20 @@
 package me.athlaeos.progressivelydifficultmobs.managers;
 
-import me.athlaeos.progressivelydifficultmobs.pojo.PlayerMenuUtility;
+import me.athlaeos.progressivelydifficultmobs.utils.general.PlayerMenuUtility;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
 public class PlayerMenuUtilManager {
-    private HashMap<Player, PlayerMenuUtility> playerMenuMap = new HashMap<>();
     private static PlayerMenuUtilManager manager = null;
+    private final HashMap<Player, PlayerMenuUtility> playerMenuMap = new HashMap<>();
 
-    public PlayerMenuUtilManager(){
+    public PlayerMenuUtilManager() {
 
     }
 
-    public static PlayerMenuUtilManager getInstance(){
-        if (manager == null){
+    public static PlayerMenuUtilManager getInstance() {
+        if (manager == null) {
             manager = new PlayerMenuUtilManager();
         }
         return manager;
@@ -26,8 +26,8 @@ public class PlayerMenuUtilManager {
      *
      * @return A PlayerMenuUtility object belonging to a player, or a new blank one if none were found.
      */
-    public PlayerMenuUtility getPlayerMenuUtility(Player p){
-        if (!playerMenuMap.containsKey(p)){
+    public PlayerMenuUtility getPlayerMenuUtility(Player p) {
+        if (!playerMenuMap.containsKey(p)) {
             PlayerMenuUtility utility = new PlayerMenuUtility(p);
             playerMenuMap.put(p, utility);
         }

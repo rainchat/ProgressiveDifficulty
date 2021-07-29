@@ -1,6 +1,6 @@
 package me.athlaeos.progressivelydifficultmobs.managers;
 
-import me.athlaeos.progressivelydifficultmobs.pojo.Config;
+import me.athlaeos.progressivelydifficultmobs.utils.general.Config;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.List;
@@ -15,135 +15,135 @@ public class PluginConfigurationManager {
     private final YamlConfiguration translationYaml;
     private final YamlConfiguration mainYaml;
 
-    private String goodKarmaGainNegative;
-    private String goodKarmaGainPositive;
-    private String badKarmaGainNegative;
-    private String badKarmaGainPositive;
+    private final String goodKarmaGainNegative;
+    private final String goodKarmaGainPositive;
+    private final String badKarmaGainNegative;
+    private final String badKarmaGainPositive;
     private int minKarmaLevel;
     private int maxKarmaLevel;
     private double baseKarma;
-    private double baseBadKarmaMultiplier;
-    private double baseGoodKarmaMultiplier;
+    private final double baseBadKarmaMultiplier;
+    private final double baseGoodKarmaMultiplier;
     private boolean lockKarma;
     private double karmaBuffer;
     private boolean forceKarma;
-    private double defaultKarmaOnHostileKilled;
-    private double defaultKarmaOnPassiveKilled;
-    private double karmaOnRaidWin;
-    private double karmaOnRaidLoss;
-    private boolean permanentEnableOnToggle;
-    private int maxCurse;
+    private final double defaultKarmaOnHostileKilled;
+    private final double defaultKarmaOnPassiveKilled;
+    private final double karmaOnRaidWin;
+    private final double karmaOnRaidLoss;
+    private final boolean permanentEnableOnToggle;
+    private final int maxCurse;
     private double cursedEnemyChance;
-    private boolean vanillaCursed;
-    private boolean cursedDropPrevention;
-    private double curseHealthMultiplier;
-    private double curseDamageMultiplier;
-    private double curseBossHealthMultiplier;
-    private double curseBossDamageMultiplier;
-    private boolean useAnimationRunnables;
-    private boolean useAnimationParticles;
-    private double evilDeathKarmaPenalty;
-    private double goodDeathKarmaPenalty;
-    private boolean evilDeathKarmaPenaltyFractional;
-    private boolean goodDeathKarmaPenaltyFractional;
-    private boolean evilDeathKarmaPenaltyMitigated;
-    private boolean goodDeathKarmaPenaltyMitigated;
-    private boolean curseDropDoubling;
-    private double curseEXPMultiplier;
+    private final boolean vanillaCursed;
+    private final boolean cursedDropPrevention;
+    private final double curseHealthMultiplier;
+    private final double curseDamageMultiplier;
+    private final double curseBossHealthMultiplier;
+    private final double curseBossDamageMultiplier;
+    private final boolean useAnimationRunnables;
+    private final boolean useAnimationParticles;
+    private final double evilDeathKarmaPenalty;
+    private final double goodDeathKarmaPenalty;
+    private final boolean evilDeathKarmaPenaltyFractional;
+    private final boolean goodDeathKarmaPenaltyFractional;
+    private final boolean evilDeathKarmaPenaltyMitigated;
+    private final boolean goodDeathKarmaPenaltyMitigated;
+    private final boolean curseDropDoubling;
+    private final double curseEXPMultiplier;
 
-    private String PAPIKarmaDisabled;
-    private String PAPIKarmaEnabled;
+    private final String PAPIKarmaDisabled;
+    private final String PAPIKarmaEnabled;
 
-    private String errorNoPermission;
-    private String baseCommandHelp;
-    private String commandNotFoundError;
-    private String invalidNumberError;
-    private String playerNotFoundError;
-    private String playerTooMuchCurseError;
-    private String playerCantUseItemError;
+    private final String errorNoPermission;
+    private final String baseCommandHelp;
+    private final String commandNotFoundError;
+    private final String invalidNumberError;
+    private final String playerNotFoundError;
+    private final String playerTooMuchCurseError;
+    private final String playerCantUseItemError;
 
-    private String translationPermissions;
-    private String translationYes;
-    private String translationNo;
+    private final String translationPermissions;
+    private final String translationYes;
+    private final String translationNo;
 
-    private List<String> evilRevealingEntity;
-    private List<String> evilRevealingPlayer;
+    private final List<String> evilRevealingEntity;
+    private final List<String> evilRevealingPlayer;
 
-    private String karmaEnabledByDefault;
-    private String karmaCantBeDisabled;
-    private String karmaEnabledMessage;
-    private String karmaDisabledMessage;
-    private String toggleKarmaCommandDescription;
+    private final String karmaEnabledByDefault;
+    private final String karmaCantBeDisabled;
+    private final String karmaEnabledMessage;
+    private final String karmaDisabledMessage;
+    private final String toggleKarmaCommandDescription;
 
-    private String setKarmaMessage;
-    private String setKarmaDescription;
+    private final String setKarmaMessage;
+    private final String setKarmaDescription;
 
-    private String setBadKarmaMultiplierMessage;
-    private String setGoodKarmaMultiplierMessage;
-    private String setKarmaMultiplierDescription;
+    private final String setBadKarmaMultiplierMessage;
+    private final String setGoodKarmaMultiplierMessage;
+    private final String setKarmaMultiplierDescription;
 
-    private String setCurseMessage;
-    private String setCurseDescription;
+    private final String setCurseMessage;
+    private final String setCurseDescription;
 
-    private String addKarmaMessage;
-    private String addKarmaDescription;
+    private final String addKarmaMessage;
+    private final String addKarmaDescription;
 
-    private String addCurseMessage;
-    private String addCurseDescription;
+    private final String addCurseMessage;
+    private final String addCurseDescription;
 
-    private String saveChangesMessage;
-    private String saveChangesCommandDescription;
+    private final String saveChangesMessage;
+    private final String saveChangesCommandDescription;
 
-    private String pluginReloadedMessage;
-    private String reloadCommandDescription;
+    private final String pluginReloadedMessage;
+    private final String reloadCommandDescription;
 
-    private String manageLootTablesCommandDescription;
+    private final String manageLootTablesCommandDescription;
 
-    private String manageMonstersCommandDescription;
+    private final String manageMonstersCommandDescription;
 
-    private String localDifficultyMessage;
-    private String localDifficultyCommandDescription;
+    private final String localDifficultyMessage;
+    private final String localDifficultyCommandDescription;
 
-    private String getKarmaMessage;
-    private String getKarmaCommandDescription;
+    private final String getKarmaMessage;
+    private final String getKarmaCommandDescription;
 
-    private String getKarmaMultiplierMessage;
-    private String getKarmaMultiplierCommandDescription;
+    private final String getKarmaMultiplierMessage;
+    private final String getKarmaMultiplierCommandDescription;
 
-    private String getCurseMessage;
-    private String getCurseCommandDescription;
+    private final String getCurseMessage;
+    private final String getCurseCommandDescription;
 
-    private String createMonsterInvalidMonsterError;
-    private String createMonsterInvalidNameError;
-    private String createMonsterMessage;
-    private String createMonsterCommandDescription;
+    private final String createMonsterInvalidMonsterError;
+    private final String createMonsterInvalidNameError;
+    private final String createMonsterMessage;
+    private final String createMonsterCommandDescription;
 
-    private String createLootTableInvalidNameError;
-    private String createLootTableInvalidIconError;
-    private String createLootTableCommandDescription;
+    private final String createLootTableInvalidNameError;
+    private final String createLootTableInvalidIconError;
+    private final String createLootTableCommandDescription;
 
-    private String getItemMessage;
-    private String getItemCommandDescription;
+    private final String getItemMessage;
+    private final String getItemCommandDescription;
 
-    private String getSpawnEggInvalidNameError;
-    private String getSpawnEggCommandDescription;
+    private final String getSpawnEggInvalidNameError;
+    private final String getSpawnEggCommandDescription;
 
-    private String getCooldownMessage;
-    private String setCooldownMessage;
-    private String cooldownCommandDescription;
-    private String invalidCooldownKeyError;
+    private final String getCooldownMessage;
+    private final String setCooldownMessage;
+    private final String cooldownCommandDescription;
+    private final String invalidCooldownKeyError;
 
-    private String removePerkSuccessMessage;
-    private String removePerkErrorMessage;
-    private String addPerkSuccessMessage;
-    private String addPerkErrorMessage;
-    private String getPerksMessage;
-    private String getPerksSyntax;
-    private String perksCommandDescription;
+    private final String removePerkSuccessMessage;
+    private final String removePerkErrorMessage;
+    private final String addPerkSuccessMessage;
+    private final String addPerkErrorMessage;
+    private final String getPerksMessage;
+    private final String getPerksSyntax;
+    private final String perksCommandDescription;
 
-    private String changeNickCommandDescription;
+    private final String changeNickCommandDescription;
 
-    public PluginConfigurationManager(){
+    public PluginConfigurationManager() {
         configManager = ConfigManager.getInstance();
         translationConfig = configManager.getConfig("translations.yml");
         mainConfig = configManager.getConfig("config.yml");
@@ -189,16 +189,16 @@ public class PluginConfigurationManager {
 
         if (cursedEnemyChance < 0) cursedEnemyChance = 0D;
 
-        if (karmaBuffer < 0){
+        if (karmaBuffer < 0) {
             this.setKarmaBuffer(0D);
             System.out.println("[PDM] Config error: karma_buffer was set below 0, reset to 0");
         }
 
-        if (minKarmaLevel > 0){
+        if (minKarmaLevel > 0) {
             minKarmaLevel = 0;
             System.out.println("[PDM] Config error: min_karma_lv was set above 0, reset to 0");
         }
-        if (maxKarmaLevel < 0){
+        if (maxKarmaLevel < 0) {
             maxKarmaLevel = 0;
             System.out.println("[PDM] Config error: max_karma_lv was set below 0, reset to 0");
         }
@@ -305,19 +305,23 @@ public class PluginConfigurationManager {
         itemConfig.copyDefaults(true);
     }
 
-    public static PluginConfigurationManager getInstance(){
-        if (manager == null){
+    public static PluginConfigurationManager getInstance() {
+        if (manager == null) {
             manager = new PluginConfigurationManager();
         }
         return manager;
     }
 
-    public void reload(){
+    public void reload() {
         manager = new PluginConfigurationManager();
     }
 
     public double getBaseKarma() {
         return baseKarma;
+    }
+
+    public void setBaseKarma(double baseKarma) {
+        this.baseKarma = baseKarma;
     }
 
     public double getBaseBadKarmaMultiplier() {
@@ -328,16 +332,12 @@ public class PluginConfigurationManager {
         return karmaBuffer;
     }
 
-    public boolean isLockKarma() {
-        return lockKarma;
-    }
-
-    public void setBaseKarma(double baseKarma) {
-        this.baseKarma = baseKarma;
-    }
-
     public void setKarmaBuffer(double karmaBuffer) {
         this.karmaBuffer = karmaBuffer;
+    }
+
+    public boolean isLockKarma() {
+        return lockKarma;
     }
 
     public void setLockKarma(boolean lockKarma) {
@@ -712,7 +712,7 @@ public class PluginConfigurationManager {
         return curseDropDoubling;
     }
 
-    public String getChangeNickCommandDescription(){
+    public String getChangeNickCommandDescription() {
         return changeNickCommandDescription;
     }
 

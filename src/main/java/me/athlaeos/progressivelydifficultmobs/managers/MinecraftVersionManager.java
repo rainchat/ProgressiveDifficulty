@@ -1,18 +1,18 @@
 package me.athlaeos.progressivelydifficultmobs.managers;
 
-import me.athlaeos.progressivelydifficultmobs.main.Main;
+import me.athlaeos.progressivelydifficultmobs.ProgressivelyMain;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MinecraftVersionManager {
     private static MinecraftVersionManager manager = null;
-    private Map<MinecraftVersion, Integer> versions = new HashMap<>();
+    private static ProgressivelyMain plugin;
+    private final Map<MinecraftVersion, Integer> versions = new HashMap<>();
     private MinecraftVersion serverVersion;
-    private static Main plugin;
 
-    public MinecraftVersionManager(){
-        plugin = Main.getInstance();
+    public MinecraftVersionManager() {
+        plugin = ProgressivelyMain.getInstance();
         setServerVersion();
         versions.put(MinecraftVersion.MINECRAFT_1_8, 1);
         versions.put(MinecraftVersion.MINECRAFT_1_9, 2);
@@ -26,24 +26,24 @@ public class MinecraftVersionManager {
         versions.put(MinecraftVersion.MINECRAFT_1_17, 10);
     }
 
-    public static MinecraftVersionManager getInstance(){
-        if (manager == null){
+    public static MinecraftVersionManager getInstance() {
+        if (manager == null) {
             manager = new MinecraftVersionManager();
         }
         return manager;
     }
 
-    public boolean currentVersionOlderThan(MinecraftVersion version){
+    public boolean currentVersionOlderThan(MinecraftVersion version) {
         if (serverVersion == MinecraftVersion.INCOMPATIBLE) return false;
         return versions.get(serverVersion) <= versions.get(version);
     }
 
-    public boolean currentVersionNewerThan(MinecraftVersion version){
+    public boolean currentVersionNewerThan(MinecraftVersion version) {
         if (serverVersion == MinecraftVersion.INCOMPATIBLE) return false;
         return versions.get(serverVersion) >= versions.get(version);
     }
 
-    private void setServerVersion(){
+    private void setServerVersion() {
         String version = plugin.getServer().getVersion();
         if (version.contains("1_8") || version.contains("1.8")) serverVersion = MinecraftVersion.MINECRAFT_1_8;
         else if (version.contains("1_9") || version.contains("1.9")) serverVersion = MinecraftVersion.MINECRAFT_1_9;

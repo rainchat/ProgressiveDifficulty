@@ -1,8 +1,8 @@
 name: ProgressiveDifficulty_MOBS
-version: 1.0
+version: ${project.version}
 api-version: 1.14
-main: me.athlaeos.progressivelydifficultmobs.main.Main
-authors: [Athlaeos]
+main: me.athlaeos.progressivelydifficultmobs.ProgressivelyMain
+authors: [ Athlaeos, rain_chat ]
 softdepend: [WorldGuard]
 loadbefore: [WorldGuard]
 description: A fully customizable plugin featuring a karma system that will slowly make mobs more or less difficult

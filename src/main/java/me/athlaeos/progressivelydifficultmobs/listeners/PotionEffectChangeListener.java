@@ -2,12 +2,11 @@ package me.athlaeos.progressivelydifficultmobs.listeners;
 
 import me.athlaeos.progressivelydifficultmobs.managers.CooldownManager;
 import me.athlaeos.progressivelydifficultmobs.managers.PlayerPerksManager;
-import me.athlaeos.progressivelydifficultmobs.perks.Perk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.Perk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
@@ -27,25 +26,25 @@ public class PotionEffectChangeListener implements Listener {
             PotionEffectType.WEAKNESS
     );
 
-    public PotionEffectChangeListener(){
+    public PotionEffectChangeListener() {
 
     }
 
     @EventHandler
-    public void onPotionEffect(EntityPotionEffectEvent e){
-        if (!e.isCancelled()){
-            if (e.getEntity() instanceof Player){
+    public void onPotionEffect(EntityPotionEffectEvent e) {
+        if (!e.isCancelled()) {
+            if (e.getEntity() instanceof Player) {
                 Player p = (Player) e.getEntity();
 
-                if (e.getAction() == EntityPotionEffectEvent.Action.ADDED){
-                    if (!CooldownManager.getInstance().cooldownLowerThanZero(p, "cleanse_debuffs_duration")){
-                        if (potionEffectsToCleanse.contains(e.getModifiedType())){
+                if (e.getAction() == EntityPotionEffectEvent.Action.ADDED) {
+                    if (!CooldownManager.getInstance().cooldownLowerThanZero(p, "cleanse_debuffs_duration")) {
+                        if (potionEffectsToCleanse.contains(e.getModifiedType())) {
                             e.setCancelled(true);
                         }
                     }
                 }
 
-                for (Perk perk : PlayerPerksManager.getInstance().sortPerksByPriority(PlayerPerksManager.getInstance().getPlayersTotalPerks(p))){
+                for (Perk perk : PlayerPerksManager.getInstance().sortPerksByPriority(PlayerPerksManager.getInstance().getPlayersTotalPerks(p))) {
                     perk.execute(e);
                 }
             }

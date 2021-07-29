@@ -1,17 +1,17 @@
 package me.athlaeos.progressivelydifficultmobs.managers;
 
-import me.athlaeos.progressivelydifficultmobs.main.Main;
-import me.athlaeos.progressivelydifficultmobs.perks.Perk;
-import me.athlaeos.progressivelydifficultmobs.perks.PerkTriggerPriority;
-import me.athlaeos.progressivelydifficultmobs.perks.onattackperks.DamageBuffPerk;
-import me.athlaeos.progressivelydifficultmobs.perks.onattackperks.DamageNerfPerk;
-import me.athlaeos.progressivelydifficultmobs.perks.onblockbreakperks.ExtraFarmingDropsPerk;
-import me.athlaeos.progressivelydifficultmobs.perks.onblockbreakperks.FarmingEXPPerk;
-import me.athlaeos.progressivelydifficultmobs.perks.onblockinteractperks.AutoReplantCropsPerk;
-import me.athlaeos.progressivelydifficultmobs.perks.ondamagedperks.*;
-import me.athlaeos.progressivelydifficultmobs.perks.onentitybreedperks.ExtraBreedingEXPPerk;
-import me.athlaeos.progressivelydifficultmobs.perks.onpotioneffectperks.BlindImmunityPerk;
-import me.athlaeos.progressivelydifficultmobs.perks.onpotioneffectperks.SlowImmunityPerk;
+import me.athlaeos.progressivelydifficultmobs.ProgressivelyMain;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.Perk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.PerkTriggerPriority;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.onattackperks.DamageBuffPerk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.onattackperks.DamageNerfPerk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.onblockbreakperks.ExtraFarmingDropsPerk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.onblockbreakperks.FarmingEXPPerk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.onblockinteractperks.AutoReplantCropsPerk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.ondamagedperks.*;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.onentitybreedperks.ExtraBreedingEXPPerk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.onpotioneffectperks.BlindImmunityPerk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.onpotioneffectperks.SlowImmunityPerk;
 import me.athlaeos.progressivelydifficultmobs.utils.Utils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,17 +22,23 @@ import java.util.*;
 
 public class PlayerPerksManager {
     private static PlayerPerksManager manager = null;
-    private Map<Integer, Perk> allPerks = new HashMap<>();
-
-    private Map<Integer, List<Integer>> levelPerks = new HashMap<>();
-    private NamespacedKey playerPerksKey = new NamespacedKey(Main.getInstance(), "pdm-player-perks");
     private final YamlConfiguration config = ConfigManager.getInstance().getConfig("perks.yml").get();
+    private final Map<Integer, Perk> allPerks = new HashMap<>();
+    private final Map<Integer, List<Integer>> levelPerks = new HashMap<>();
+    private final NamespacedKey playerPerksKey = new NamespacedKey(ProgressivelyMain.getInstance(), "pdm-player-perks");
 
-    public PlayerPerksManager(){
+    public PlayerPerksManager() {
         registerStandardPerks();
     }
 
-    private void registerStandardPerks(){
+    public static PlayerPerksManager getInstance() {
+        if (manager == null) {
+            manager = new PlayerPerksManager();
+        }
+        return manager;
+    }
+
+    private void registerStandardPerks() {
         registerPerk(new AutoReplantCropsPerk()); //1000
         registerPerk(new FarmingEXPPerk()); //1001
         registerPerk(new ExtraFarmingDropsPerk()); //1002
@@ -84,37 +90,37 @@ public class PlayerPerksManager {
         registerPerk(new ResilientPerk()); //1048
     }
 
-    public Perk getPerkByName(String name){
-        for (Integer i : allPerks.keySet()){
+    public Perk getPerkByName(String name) {
+        for (Integer i : allPerks.keySet()) {
             Perk p = allPerks.get(i);
-            if (p.getName().equals(name)){
+            if (p.getName().equals(name)) {
                 return p;
             }
         }
         return null;
     }
 
-    public void saveLevelPerks(){
-        for (Integer level : levelPerks.keySet()){
-            config.set("level_perks."+level, levelPerks.get(level));
+    public void saveLevelPerks() {
+        for (Integer level : levelPerks.keySet()) {
+            config.set("level_perks." + level, levelPerks.get(level));
         }
         ConfigManager.getInstance().saveConfig("perks.yml");
     }
 
-    public void loadLevelPerks(){
+    public void loadLevelPerks() {
         if (config.getConfigurationSection("level_perks") == null) return;
         Set<String> section = config.getConfigurationSection("level_perks").getKeys(false);
-        for (String level : section){
+        for (String level : section) {
             try {
                 int lv = Integer.parseInt(level);
-                levelPerks.put(lv, config.getIntegerList("level_perks."+lv));
-            } catch (IllegalArgumentException ignored){
+                levelPerks.put(lv, config.getIntegerList("level_perks." + lv));
+            } catch (IllegalArgumentException ignored) {
             }
         }
     }
 
-    public void addLevelPerk(int level, int perkID){
-        if (levelPerks.get(level) != null){
+    public void addLevelPerk(int level, int perkID) {
+        if (levelPerks.get(level) != null) {
             List<Integer> perks = levelPerks.get(level);
             perks.add(perkID);
             levelPerks.put(level, perks);
@@ -125,8 +131,8 @@ public class PlayerPerksManager {
         }
     }
 
-    public void removeLevelPerk(int level, int perkID){
-        if (levelPerks.get(level) != null){
+    public void removeLevelPerk(int level, int perkID) {
+        if (levelPerks.get(level) != null) {
             List<Integer> perks = levelPerks.get(level);
             perks.remove(Integer.valueOf(perkID));
             levelPerks.put(level, perks);
@@ -137,7 +143,7 @@ public class PlayerPerksManager {
         return allPerks;
     }
 
-    public void reload(){
+    public void reload() {
         saveLevelPerks();
         this.allPerks.clear();
         this.levelPerks.clear();
@@ -145,7 +151,7 @@ public class PlayerPerksManager {
         loadLevelPerks();
     }
 
-    public void registerPerk(Perk p){
+    public void registerPerk(Perk p) {
         if (p == null) return;
         if (allPerks.get(p.getId()) != null) {
             throw new IllegalArgumentException("Attempted to register perk " + p.getName() + " but its ID has already been registered");
@@ -153,15 +159,15 @@ public class PlayerPerksManager {
         allPerks.put(p.getId(), p);
     }
 
-    public List<Perk> getPlayersTotalPerks(Player p){
+    public List<Perk> getPlayersTotalPerks(Player p) {
         if (p == null) return new ArrayList<>();
         int playerLevel = PlayerKarmaManager.getInstance().getKarmaLevel(p.getUniqueId());
         List<Perk> playersPerks = new ArrayList<>(getPlayersPerks(p));
-        if (levelPerks.containsKey(playerLevel)){
-            for (Integer perkID : levelPerks.get(playerLevel)){
+        if (levelPerks.containsKey(playerLevel)) {
+            for (Integer perkID : levelPerks.get(playerLevel)) {
                 Perk perk = allPerks.get(perkID);
-                if (perk != null){
-                    if (!playersPerks.contains(perk)){
+                if (perk != null) {
+                    if (!playersPerks.contains(perk)) {
                         playersPerks.add(perk);
                     }
                 }
@@ -170,14 +176,14 @@ public class PlayerPerksManager {
         return playersPerks;
     }
 
-    public List<Perk> sortPerksByPriority(List<Perk> perks){
+    public List<Perk> sortPerksByPriority(List<Perk> perks) {
         List<Perk> sortedPerks = new ArrayList<>();
         PerkTriggerPriority[] priorities = new PerkTriggerPriority[]{PerkTriggerPriority.SOONEST, PerkTriggerPriority.SOONER,
-        PerkTriggerPriority.NEUTRAL, PerkTriggerPriority.LATER, PerkTriggerPriority.LATEST};
+                PerkTriggerPriority.NEUTRAL, PerkTriggerPriority.LATER, PerkTriggerPriority.LATEST};
 
-        for (PerkTriggerPriority p : priorities){
-            for (Perk perk : perks){
-                if (perk.getPerkPriority() == p){
+        for (PerkTriggerPriority p : priorities) {
+            for (Perk perk : perks) {
+                if (perk.getPerkPriority() == p) {
                     sortedPerks.add(perk);
                 }
             }
@@ -185,23 +191,23 @@ public class PlayerPerksManager {
         return sortedPerks;
     }
 
-    public List<Perk> getLevelsPerks(int i){
+    public List<Perk> getLevelsPerks(int i) {
         List<Perk> returnList = new ArrayList<>();
         if (levelPerks.get(i) == null) return returnList;
-        for (Integer integer : levelPerks.get(i)){
+        for (Integer integer : levelPerks.get(i)) {
             Perk p = allPerks.get(integer);
-            if (p != null){
+            if (p != null) {
                 returnList.add(p);
             }
         }
         return returnList;
     }
 
-    public List<Perk> getPlayersPerks(Player p){
-        if (p.getPersistentDataContainer().has(playerPerksKey, PersistentDataType.INTEGER_ARRAY)){
+    public List<Perk> getPlayersPerks(Player p) {
+        if (p.getPersistentDataContainer().has(playerPerksKey, PersistentDataType.INTEGER_ARRAY)) {
             List<Perk> playerPerks = new ArrayList<>();
-            for (Integer perkID : p.getPersistentDataContainer().get(playerPerksKey, PersistentDataType.INTEGER_ARRAY)){
-                if (allPerks.get(perkID) != null){
+            for (Integer perkID : p.getPersistentDataContainer().get(playerPerksKey, PersistentDataType.INTEGER_ARRAY)) {
+                if (allPerks.get(perkID) != null) {
                     playerPerks.add(allPerks.get(perkID));
                 }
             }
@@ -210,9 +216,9 @@ public class PlayerPerksManager {
         return new ArrayList<>();
     }
 
-    public boolean addPlayerPerk(Player p, int id){
+    public boolean addPlayerPerk(Player p, int id) {
         if (allPerks.get(id) == null) return false;
-        if (!p.getPersistentDataContainer().has(playerPerksKey, PersistentDataType.INTEGER_ARRAY)){
+        if (!p.getPersistentDataContainer().has(playerPerksKey, PersistentDataType.INTEGER_ARRAY)) {
             p.getPersistentDataContainer().set(playerPerksKey, PersistentDataType.INTEGER_ARRAY, new int[0]);
         }
         List<Integer> playersPerks = Utils.toIntList(p.getPersistentDataContainer().get(playerPerksKey, PersistentDataType.INTEGER_ARRAY));
@@ -222,9 +228,9 @@ public class PlayerPerksManager {
         return true;
     }
 
-    public boolean removePlayerPerk(Player p, int id){
+    public boolean removePlayerPerk(Player p, int id) {
         if (allPerks.get(id) == null) return false;
-        if (!p.getPersistentDataContainer().has(playerPerksKey, PersistentDataType.INTEGER_ARRAY)){
+        if (!p.getPersistentDataContainer().has(playerPerksKey, PersistentDataType.INTEGER_ARRAY)) {
             return false;
         }
         List<Integer> playersPerks = Utils.toIntList(p.getPersistentDataContainer().get(playerPerksKey, PersistentDataType.INTEGER_ARRAY));
@@ -234,12 +240,5 @@ public class PlayerPerksManager {
             return true;
         }
         return false;
-    }
-
-    public static PlayerPerksManager getInstance(){
-        if (manager == null){
-            manager = new PlayerPerksManager();
-        }
-        return manager;
     }
 }

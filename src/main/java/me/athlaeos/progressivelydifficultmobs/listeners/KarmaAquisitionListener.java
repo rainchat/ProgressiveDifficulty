@@ -1,12 +1,11 @@
 package me.athlaeos.progressivelydifficultmobs.listeners;
 
-import me.athlaeos.progressivelydifficultmobs.events.PlayerKarmaGainEvent;
-import me.athlaeos.progressivelydifficultmobs.main.Main;
+import me.athlaeos.progressivelydifficultmobs.api.events.PlayerKarmaGainEvent;
 import me.athlaeos.progressivelydifficultmobs.managers.JudgedPlayersManager;
 import me.athlaeos.progressivelydifficultmobs.managers.PlayerKarmaManager;
 import me.athlaeos.progressivelydifficultmobs.managers.PlayerPerksManager;
 import me.athlaeos.progressivelydifficultmobs.managers.PluginConfigurationManager;
-import me.athlaeos.progressivelydifficultmobs.perks.Perk;
+import me.athlaeos.progressivelydifficultmobs.resourse.perks.Perk;
 import me.athlaeos.progressivelydifficultmobs.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,18 +14,18 @@ import org.bukkit.event.Listener;
 
 public class KarmaAquisitionListener implements Listener {
 
-    @EventHandler (priority = EventPriority.LOWEST)
-    public void onKarmaGain(PlayerKarmaGainEvent e){
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onKarmaGain(PlayerKarmaGainEvent e) {
         PluginConfigurationManager config = PluginConfigurationManager.getInstance();
         PlayerKarmaManager karmaManager = PlayerKarmaManager.getInstance();
         Player onlinePlayer = e.getPlayer();
         PlayerPerksManager manager = PlayerPerksManager.getInstance();
-        for (Perk perk : manager.sortPerksByPriority(manager.getPlayersTotalPerks(e.getPlayer()))){
+        for (Perk perk : manager.sortPerksByPriority(manager.getPlayersTotalPerks(e.getPlayer()))) {
             perk.execute(e);
         }
         boolean judgePlayer;
-        if (config.isForceKarma()){
-            if (onlinePlayer.hasPermission("pdm.ignoreforcekarma")){
+        if (config.isForceKarma()) {
+            if (onlinePlayer.hasPermission("pdm.ignoreforcekarma")) {
                 judgePlayer = JudgedPlayersManager.getInstance().isPlayerJudged(onlinePlayer);
             } else {
                 judgePlayer = true;

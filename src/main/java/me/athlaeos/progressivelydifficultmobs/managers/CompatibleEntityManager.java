@@ -1,6 +1,5 @@
 package me.athlaeos.progressivelydifficultmobs.managers;
 
-import me.athlaeos.progressivelydifficultmobs.main.Main;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 
@@ -15,7 +14,7 @@ public class CompatibleEntityManager {
     private final Map<EntityType, Material> passiveMobIcons = new HashMap<>();
     private final Map<EntityType, Material> hostileMobIcons = new HashMap<>();
 
-    public CompatibleEntityManager(){
+    public CompatibleEntityManager() {
 
         registerHostileMobIcon("BLAZE", "BLAZE_ROD");
         registerHostileMobIcon("CAVE_SPIDER", "SPIDER_EYE");
@@ -89,8 +88,8 @@ public class CompatibleEntityManager {
         registerPassiveMobIcon("ZOMBIE_HORSE", "ROTTEN_FLESH");
     }
 
-    public static CompatibleEntityManager getInstance(){
-        if (manager == null){
+    public static CompatibleEntityManager getInstance() {
+        if (manager == null) {
             manager = new CompatibleEntityManager();
         }
         return manager;
@@ -99,7 +98,7 @@ public class CompatibleEntityManager {
     /**
      * @return a TreeMap of all the passive mobs the plugin can edit, along with what icons should be used in the GUI menus
      */
-    public Map<EntityType, Material> getPassiveMobIcons(){
+    public Map<EntityType, Material> getPassiveMobIcons() {
         return new TreeMap<>(passiveMobIcons);
     }
 
@@ -113,7 +112,7 @@ public class CompatibleEntityManager {
     /**
      * @return a TreeMap of all mobs the plugin can edit, along with what icons should be used in the GUI menus
      */
-    public Map<EntityType, Material> getAllMobIcons(){
+    public Map<EntityType, Material> getAllMobIcons() {
         Map<EntityType, Material> map = new HashMap<>();
         map.putAll(passiveMobIcons);
         map.putAll(hostileMobIcons);
@@ -124,12 +123,13 @@ public class CompatibleEntityManager {
      * Registers a new mob in the hostile mob category.
      * The EntityType and Material ENUMS are done with strings, so that in case they don't exist
      * in this version of minecraft it won't cause any problems.
+     *
      * @param entityType
      * @param itemMaterial
      */
-    public void registerHostileMobIcon(String entityType, String itemMaterial){
+    public void registerHostileMobIcon(String entityType, String itemMaterial) {
         EntityType type;
-        try{
+        try {
             type = EntityType.valueOf(entityType);
         } catch (IllegalArgumentException ignored) {
             return;
@@ -147,12 +147,13 @@ public class CompatibleEntityManager {
      * Registers a new mob in the passive mob category.
      * The EntityType and Material ENUMS are done with strings, so that in case they don't exist
      * in this version of minecraft it won't cause any problems.
+     *
      * @param entityType
      * @param itemMaterial
      */
-    public void registerPassiveMobIcon(String entityType, String itemMaterial){
+    public void registerPassiveMobIcon(String entityType, String itemMaterial) {
         EntityType type;
-        try{
+        try {
             type = EntityType.valueOf(entityType);
         } catch (IllegalArgumentException ignored) {
             return;

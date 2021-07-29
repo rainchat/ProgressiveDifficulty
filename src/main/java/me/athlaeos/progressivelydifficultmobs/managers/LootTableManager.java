@@ -1,28 +1,26 @@
 package me.athlaeos.progressivelydifficultmobs.managers;
 
-import me.athlaeos.progressivelydifficultmobs.pojo.Drop;
-import me.athlaeos.progressivelydifficultmobs.pojo.LeveledMonster;
-import me.athlaeos.progressivelydifficultmobs.pojo.LootTable;
 import me.athlaeos.progressivelydifficultmobs.utils.Utils;
+import me.athlaeos.progressivelydifficultmobs.utils.general.Drop;
+import me.athlaeos.progressivelydifficultmobs.utils.general.LeveledMonster;
+import me.athlaeos.progressivelydifficultmobs.utils.general.LootTable;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class LootTableManager {
 
     private static LootTableManager manager = null;
-    private List<LootTable> allLootTables = new ArrayList<>();
+    private final List<LootTable> allLootTables = new ArrayList<>();
     private boolean enabled = false;
 
-    public LootTableManager(){
+    public LootTableManager() {
 
     }
 
-    public static LootTableManager getInstance(){
-        if (manager == null){
+    public static LootTableManager getInstance() {
+        if (manager == null) {
             manager = new LootTableManager();
         }
         return manager;
@@ -31,15 +29,15 @@ public class LootTableManager {
     /*
 
      */
-    public int getNextAvailableLootTable(){
+    public int getNextAvailableLootTable() {
         int nextAvailableID = 0;
-        for (LootTable table : allLootTables){
+        for (LootTable table : allLootTables) {
             try {
                 int thisTableID = Integer.parseInt(table.getName().replace("loot_table_", ""));
-                if (thisTableID >= nextAvailableID){
+                if (thisTableID >= nextAvailableID) {
                     nextAvailableID = thisTableID + 1;
                 }
-            } catch (IllegalArgumentException ignored){
+            } catch (IllegalArgumentException ignored) {
             }
         }
         return nextAvailableID;
@@ -49,8 +47,8 @@ public class LootTableManager {
      * @param name
      * @return the LootTable with the given integer ID
      */
-    public LootTable getLootTable(String name){
-        for (LootTable t : allLootTables){
+    public LootTable getLootTable(String name) {
+        for (LootTable t : allLootTables) {
             if (t.getName().equals(name)) return t;
         }
         return null;
@@ -60,8 +58,8 @@ public class LootTableManager {
      * @param name
      * @return the LootTable with the given name, or null if it doesn't exist
      */
-    public LootTable getLootTableByName(String name){
-        for (LootTable t : allLootTables){
+    public LootTable getLootTableByName(String name) {
+        for (LootTable t : allLootTables) {
             if (t.getName().equals(name)) return t;
         }
         return null;
@@ -76,20 +74,22 @@ public class LootTableManager {
 
     /**
      * Registers a LootTable to be used with the plugin
+     *
      * @param table
      */
-    public void registerLootTable(LootTable table){
-        if (!allLootTables.contains(table)){
+    public void registerLootTable(LootTable table) {
+        if (!allLootTables.contains(table)) {
             allLootTables.add(table);
         }
     }
 
     /**
      * Deletes the given LootTable
+     *
      * @param table
      */
-    public void deleteLootTable(LootTable table){
-        for (LeveledMonster m : LeveledMonsterManager.getInstance().getAllMonsters()){
+    public void deleteLootTable(LootTable table) {
+        for (LeveledMonster m : LeveledMonsterManager.getInstance().getAllMonsters()) {
             if (m.getLootTables().contains(table.getName())) {
                 m.removeLootTable(table.getName());
             }
@@ -99,22 +99,23 @@ public class LootTableManager {
 
     /**
      * Picks items randomly from the given LootTables and returns them.
+     *
      * @param lootingLevel
      * @param availableLootTables
      * @return a list of ItemStacks
      */
-    public List<ItemStack> getRandomDrops(int lootingLevel, List<String> availableLootTables){
-        if (enabled){
+    public List<ItemStack> getRandomDrops(int lootingLevel, List<String> availableLootTables) {
+        if (enabled) {
             List<ItemStack> droppedLoot = new ArrayList<>();
-            for (String i : availableLootTables){
+            for (String i : availableLootTables) {
                 LootTable t = getLootTable(i);
-                if (t == null){
+                if (t == null) {
                     continue;
                 }
-                for (Drop d : t.getDrops()){
+                for (Drop d : t.getDrops()) {
                     int dropChance = (int) ((d.getDropChance() + (d.getDropChanceLootingBonus() * lootingLevel)) * 10);
                     if (dropChance > 1000) dropChance = 1000;
-                    if (Utils.getRandom().nextInt(1000) + 1 < dropChance){
+                    if (Utils.getRandom().nextInt(1000) + 1 < dropChance) {
                         int minDropped = d.getMinAmountDrop() + (lootingLevel * d.getMinAmountDropLootingBonus());
                         int maxDropped = d.getMaxAmountDrop() + (lootingLevel * d.getMaxAmountDropLootingBonus());
                         int amountDropped = Utils.getRandom().nextInt(maxDropped - minDropped + 1) + minDropped;
@@ -140,6 +141,7 @@ public class LootTableManager {
     /**
      * Sets whether or not LootTables have finished loading in yet
      * This method should not be touched
+     *
      * @param enabled
      */
     public void setEnabled(boolean enabled) {
