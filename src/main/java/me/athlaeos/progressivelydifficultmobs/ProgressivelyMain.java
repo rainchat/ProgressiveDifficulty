@@ -76,6 +76,7 @@ public final class ProgressivelyMain extends JavaPlugin {
         LootTablePersister.saveLootTables();
         LeveledMonsterPersister.saveLeveledMonsters();
         PlayerPerksManager.getInstance().saveLevelPerks();
+        Utils.unLoadBossBar();
     }
 
     private void registerListeners() {
@@ -114,13 +115,16 @@ public final class ProgressivelyMain extends JavaPlugin {
             for (Entity e : w.getEntities()) {
                 if (!(e instanceof LivingEntity)) continue;
                 PersistentDataContainer container = e.getPersistentDataContainer();
-                if (container.has(key, PersistentDataType.INTEGER)) {
+                if (container.has(key, PersistentDataType.STRING)) {
+
                     LeveledMonster monster = monsterManager.getMonster(container.get(key, PersistentDataType.STRING));
-                    if (monster != null) {
-                        if (monster.isBoss()) {
-                            Utils.createBossBar(this, (LivingEntity) e, (monster.getDisplayName() == null) ? Utils.chat("&c&lBoss") : monster.getDisplayName(), BarColor.RED, BarStyle.SOLID, this.getConfig().getInt("boss_bar_view_distance"));
-                        }
+                    if (monster == null) continue;
+
+
+                    if (monster.isBoss()) {
+                        Utils.createBossBar(this, (LivingEntity) e, (monster.getDisplayName() == null) ? Utils.chat("&c&lBoss") : monster.getDisplayName(), BarColor.RED, BarStyle.SOLID, this.getConfig().getInt("boss_bar_view_distance"));
                     }
+
 
                     if (monster.getAbilities().size() != 0) {
                         for (String a : monster.getAbilities()) {

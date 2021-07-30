@@ -30,6 +30,14 @@ import java.util.regex.Pattern;
 public class Utils {
 
     private static Random random = null;
+    private static List<BossBar> bossBars = new ArrayList<>();
+
+
+    public static void unLoadBossBar() {
+        for (BossBar bossBar: bossBars) {
+            bossBar.removeAll();
+        }
+    }
 
     public static Random getRandom() {
         if (random == null) {
@@ -253,6 +261,7 @@ public class Utils {
 
     public static void createBossBar(ProgressivelyMain plugin, LivingEntity livingEntity, String title, BarColor color, BarStyle style, int radius, BarFlag... flags) {
         BossBar bossBar = plugin.getServer().createBossBar(title, color, style, flags);
+        bossBars.add(bossBar);
         new BukkitRunnable() {
             @Override
             public void run() {

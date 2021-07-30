@@ -79,89 +79,86 @@ public class LeveledMonsterPersister {
     public static void loadMonsters() {
         ConfigManager configManager = ConfigManager.getInstance();
         LeveledMonsterManager monsterManager = LeveledMonsterManager.getInstance();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+
+        try {
+            File monstersDirectory = new File(ProgressivelyMain.getInstance().getDataFolder(), "monsters");
+            if (!monstersDirectory.exists()) monstersDirectory.mkdir();
+            for (String monsterType : monstersDirectory.list()) {
+                File monsterTypeDirectory = new File(monstersDirectory, monsterType);
+                EntityType type;
                 try {
-                    File monstersDirectory = new File(ProgressivelyMain.getInstance().getDataFolder(), "monsters");
-                    if (!monstersDirectory.exists()) monstersDirectory.mkdir();
-                    for (String monsterType : monstersDirectory.list()) {
-                        File monsterTypeDirectory = new File(monstersDirectory, monsterType);
-                        EntityType type;
-                        try {
-                            type = EntityType.valueOf(monsterType);
-                        } catch (IllegalArgumentException e) {
-                            ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cMonster type " + monsterType + " was not recognized for this version of minecraft"));
-                            ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cso it was skipped. If you want this monster to be implemented anyway,"));
-                            ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&center the monsters' yml files at ProgressivelyDifficultMobs/monsters"));
-                            ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cand replace the folder name with the corrected version."));
-                            ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cExample: ZOMBIE_PIGMAN > ZOMBIFIED_PIGLIN"));
-                            ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cThen do '/pdm reload' ingame"));
+                    type = EntityType.valueOf(monsterType);
+                } catch (IllegalArgumentException e) {
+                    ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cMonster type " + monsterType + " was not recognized for this version of minecraft"));
+                    ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cso it was skipped. If you want this monster to be implemented anyway,"));
+                    ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&center the monsters' yml files at ProgressivelyDifficultMobs/monsters"));
+                    ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cand replace the folder name with the corrected version."));
+                    ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cExample: ZOMBIE_PIGMAN > ZOMBIFIED_PIGLIN"));
+                    ProgressivelyMain.getInstance().getServer().getConsoleSender().sendMessage(Utils.chat("&cThen do '/pdm reload' ingame"));
+                    continue;
+                }
+                for (String level : monsterTypeDirectory.list()) {
+                    File monsterLevelDirectory = new File(monsterTypeDirectory, level);
+                    int lv = 0;
+                    boolean globalSpawn = false;
+                    try {
+                        lv = Integer.parseInt(level);
+                    } catch (IllegalArgumentException e) {
+                        if (level.equalsIgnoreCase("global")) {
+                            globalSpawn = true;
+                        } else {
+                            System.out.println("Level directory name " + level + " is not a number, could not be read");
                             continue;
                         }
-                        for (String level : monsterTypeDirectory.list()) {
-                            File monsterLevelDirectory = new File(monsterTypeDirectory, level);
-                            int lv = 0;
-                            boolean globalSpawn = false;
-                            try {
-                                lv = Integer.parseInt(level);
-                            } catch (IllegalArgumentException e) {
-                                if (level.equalsIgnoreCase("global")) {
-                                    globalSpawn = true;
-                                } else {
-                                    System.out.println("Level directory name " + level + " is not a number, could not be read");
-                                    continue;
-                                }
-                            }
-                            for (String monsterConfig : monsterLevelDirectory.list()) {
-                                Config config = configManager.getConfig(File.separator + "monsters" + File.separator + monsterType + File.separator + level + File.separator + monsterConfig);
-                                YamlConfiguration yaml = config.get();
-                                LeveledMonster monsterToRegister = new LeveledMonster(
-                                        lv,
-                                        yaml.getInt("spawn_weight"),
-                                        monsterConfig.replace(".yml", ""),
-                                        type,
-                                        yaml.getBoolean("is_boss"),
-                                        yaml.getString("display_name"),
-                                        yaml.getBoolean("display_name_visible"),
-                                        yaml.getStringList("loot_tables"),
-                                        yaml.getStringList("abilities"),
-                                        yaml.getBoolean("drops_default_loot_table"),
-                                        yaml.getDouble("karma_influence"),
-                                        yaml.getInt("exp_on_death"),
-                                        yaml.getDouble("base_health"),
-                                        yaml.getBoolean("enabled"),
-                                        yaml.getItemStack("equipment_helmet"),
-                                        yaml.getItemStack("equipment_chest_plate"),
-                                        yaml.getItemStack("equipment_leggings"),
-                                        yaml.getItemStack("equipment_boots"),
-                                        yaml.getItemStack("equipment_main_hand"),
-                                        yaml.getItemStack("equipment_off_hand"),
-                                        yaml.getStringList("biome_filter"),
-                                        yaml.getStringList("world_filter"),
-                                        yaml.getStringList("region_filter"),
-                                        yaml.getInt("min_y_range"),
-                                        (yaml.getInt("max_y_range") == 0) ? 255 : yaml.getInt("max_y_range"),
-                                        yaml.getDouble("helmet_drop_chance"),
-                                        yaml.getDouble("chestplate_drop_chance"),
-                                        yaml.getDouble("leggings_drop_chance"),
-                                        yaml.getDouble("boots_drop_chance"),
-                                        yaml.getDouble("main_hand_drop_chance"),
-                                        yaml.getDouble("off_hand_drop_chance"),
-                                        globalSpawn);
-
-                                config.copyDefaults(true).save();
-                                monsterManager.registerMonster(monsterToRegister);
-                            }
-                        }
                     }
-                } catch (NullPointerException npe) {
-                    System.out.println("Error: Given path does not exist");
-                    npe.printStackTrace();
+                    for (String monsterConfig : monsterLevelDirectory.list()) {
+                        Config config = configManager.getConfig(File.separator + "monsters" + File.separator + monsterType + File.separator + level + File.separator + monsterConfig);
+                        YamlConfiguration yaml = config.get();
+                        LeveledMonster monsterToRegister = new LeveledMonster(
+                                lv,
+                                yaml.getInt("spawn_weight"),
+                                monsterConfig.replace(".yml", ""),
+                                type,
+                                yaml.getBoolean("is_boss"),
+                                yaml.getString("display_name"),
+                                yaml.getBoolean("display_name_visible"),
+                                yaml.getStringList("loot_tables"),
+                                yaml.getStringList("abilities"),
+                                yaml.getBoolean("drops_default_loot_table"),
+                                yaml.getDouble("karma_influence"),
+                                yaml.getInt("exp_on_death"),
+                                yaml.getDouble("base_health"),
+                                yaml.getBoolean("enabled"),
+                                yaml.getItemStack("equipment_helmet"),
+                                yaml.getItemStack("equipment_chest_plate"),
+                                yaml.getItemStack("equipment_leggings"),
+                                yaml.getItemStack("equipment_boots"),
+                                yaml.getItemStack("equipment_main_hand"),
+                                yaml.getItemStack("equipment_off_hand"),
+                                yaml.getStringList("biome_filter"),
+                                yaml.getStringList("world_filter"),
+                                yaml.getStringList("region_filter"),
+                                yaml.getInt("min_y_range"),
+                                (yaml.getInt("max_y_range") == 0) ? 255 : yaml.getInt("max_y_range"),
+                                yaml.getDouble("helmet_drop_chance"),
+                                yaml.getDouble("chestplate_drop_chance"),
+                                yaml.getDouble("leggings_drop_chance"),
+                                yaml.getDouble("boots_drop_chance"),
+                                yaml.getDouble("main_hand_drop_chance"),
+                                yaml.getDouble("off_hand_drop_chance"),
+                                globalSpawn);
+
+                        config.copyDefaults(true).save();
+                        monsterManager.registerMonster(monsterToRegister);
+                    }
                 }
-                ProgressivelyMain.getInstance().getServer().broadcast(Utils.chat("Finished loading ProgressiveDifficulty: MOBS - Monsters"), "pdm.reload");
-                LeveledMonsterManager.getInstance().enableMonsters();
             }
-        }.runTaskAsynchronously(ProgressivelyMain.getInstance());
+        } catch (NullPointerException npe) {
+            System.out.println("Error: Given path does not exist");
+            npe.printStackTrace();
+        }
+        ProgressivelyMain.getInstance().getServer().broadcast(Utils.chat("Finished loading ProgressiveDifficulty: MOBS - Monsters"), "pdm.reload");
+        LeveledMonsterManager.getInstance().enableMonsters();
+
     }
 }

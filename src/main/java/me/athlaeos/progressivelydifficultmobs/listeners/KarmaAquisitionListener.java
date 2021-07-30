@@ -6,6 +6,7 @@ import me.athlaeos.progressivelydifficultmobs.managers.PlayerKarmaManager;
 import me.athlaeos.progressivelydifficultmobs.managers.PlayerPerksManager;
 import me.athlaeos.progressivelydifficultmobs.managers.PluginConfigurationManager;
 import me.athlaeos.progressivelydifficultmobs.resourse.perks.Perk;
+import me.athlaeos.progressivelydifficultmobs.utils.MathUtil;
 import me.athlaeos.progressivelydifficultmobs.utils.Utils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,19 +43,19 @@ public class KarmaAquisitionListener implements Listener {
                 }
                 double karmaMultiplier;
                 double karmaGained;
-
+                
                 if (e.hasDiminishingEffects()) {
                     if (e.getAmount() < 0) {
                         if (playersKarma < 0) {
-                            karmaMultiplier = Utils.eval(config.getBadKarmaGainNegative().replace("{player_karma}", String.format("%.4f", playersKarma)));
+                            karmaMultiplier = Utils.eval(config.getBadKarmaGainNegative().replace("{player_karma}", String.valueOf(MathUtil.roundAvoid(playersKarma, 4))));
                         } else {
-                            karmaMultiplier = Utils.eval(config.getBadKarmaGainPositive().replace("{player_karma}", String.format("%.4f", playersKarma)));
+                            karmaMultiplier = Utils.eval(config.getBadKarmaGainPositive().replace("{player_karma}", String.valueOf(MathUtil.roundAvoid(playersKarma, 4))));
                         }
                     } else {
                         if (playersKarma < 0) {
-                            karmaMultiplier = Utils.eval(config.getGoodKarmaGainNegative().replace("{player_karma}", String.format("%.4f", playersKarma)));
+                            karmaMultiplier = Utils.eval(config.getGoodKarmaGainNegative().replace("{player_karma}", String.valueOf(MathUtil.roundAvoid(playersKarma, 4))));
                         } else {
-                            karmaMultiplier = Utils.eval(config.getGoodKarmaGainPositive().replace("{player_karma}", String.format("%.4f", playersKarma)));
+                            karmaMultiplier = Utils.eval(config.getGoodKarmaGainPositive().replace("{player_karma}", String.valueOf(MathUtil.roundAvoid(playersKarma, 4))));
                         }
                     }
                 } else {
